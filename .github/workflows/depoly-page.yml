@@ -34,7 +34,7 @@ jobs:
         env:
           CI: true
         run: |
-          npm run build -- --base=/stockEx/
+          npm run build
           cp dist/index.html dist/404.html
 
       - name: Upload artifact
