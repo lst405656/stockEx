@@ -50,7 +50,9 @@ const router = createRouter({
 
 // 페이지 타이틀
 router.afterEach((to) => {
-  if (to.meta?.title) document.title = to.meta.title as string
+  if (to.meta && to.meta.title) {
+    document.title = to.meta.title
+  }
 })
 
 export default router
