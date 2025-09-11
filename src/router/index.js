@@ -41,16 +41,16 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  scrollBehavior() {
-    return { top: 0 }
+  scrollBehavior(_to, _from, savedPosition) {
+    return savedPosition ?? { top: 0 } // 뒤로가기 시 위치 복원
   }
 })
 
-// 페이지 이동 시 타이틀 설정
+// 페이지 타이틀
 router.afterEach((to) => {
-  if (to.meta?.title) document.title = to.meta.title
+  if (to.meta?.title) document.title = to.meta.title as string
 })
 
 export default router
