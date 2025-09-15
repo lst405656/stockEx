@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import BaseCard from '@/components/cards/BaseCard.vue'
+import BaseCard from '@/components/card/BaseCard.vue'
 import Pill from '@/components/ui/Pill.vue'
 import MetricValue from '@/components/ui/MetricValue.vue'
 

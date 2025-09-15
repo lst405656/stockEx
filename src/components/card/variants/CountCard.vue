@@ -1,4 +1,4 @@
-<!-- src/components/cards/CountCard.vue -->
+<!-- src/components/card/CountCard.vue -->
 <template>
   <BaseCard
     class="count-card"

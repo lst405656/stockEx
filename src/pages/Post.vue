@@ -64,7 +64,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import BaseGrid from '@/components/grid/BaseGrid.vue'
-import CommentCard from '@/components/cards/variants/Comment.vue'
+import CommentCard from '@/components/card/variants/Comment.vue'
 import LikeButton from '@/components/button/variants/LikeButton.vue'
 import CommentButton from '@/components/button/variants/CommentButton.vue'
 import BaseInput from '@/components/inputs/BaseInput.vue'

@@ -1,4 +1,4 @@
-<!-- src/components/cards/PredictionCard.vue -->
+<!-- src/components/card/PredictionCard.vue -->
 <template>
   <BaseCard
     class="prediction-card"
@@ -25,7 +25,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import BaseCard from '@/components/cards/BaseCard.vue'
+import BaseCard from '@/components/card/BaseCard.vue'
 import Pill from '@/components/ui/Pill.vue'
 
 const props = defineProps({

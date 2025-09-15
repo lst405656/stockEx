@@ -34,7 +34,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import BaseCard from '@/components/cards/BaseCard.vue'
+import BaseCard from '@/components/card/BaseCard.vue'
 
 const props = defineProps({
   image: { type: String, default: '' },

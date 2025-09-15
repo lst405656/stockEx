@@ -86,12 +86,12 @@
 import { ref, computed, onMounted } from 'vue'
 import LinkText from '@/components/text/variants/LinkText.vue'
 import BaseGrid from '@/components/grid/BaseGrid.vue'
-import MetricCard from '@/components/cards/variants/MetricCard.vue'
-import SentimentGauge from '@/components/charts/variants/GaugeChart.vue'
-import StockPriceChart from '@/components/charts/variants/TimeChart.vue'
+import MetricCard from '@/components/card/variants/MetricCard.vue'
+import SentimentGauge from '@/components/chart/variants/GaugeChart.vue'
+import StockPriceChart from '@/components/chart/variants/TimeChart.vue'
 import BaseButton from '@/components/button/BaseButton.vue'
-import CommentWrite from '@/components/cards/variants/CommentWrite.vue'
-import Comment from '@/components/cards/variants/Comment.vue'
+import CommentWrite from '@/components/card/variants/CommentWrite.vue'
+import Comment from '@/components/card/variants/Comment.vue'
 
 /* 헤더 데이터 */
 const ticker = 'TSLA'

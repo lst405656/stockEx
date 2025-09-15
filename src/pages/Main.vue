@@ -90,9 +90,9 @@ import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 import BaseGrid from '@/components/grid/BaseGrid.vue'
-import StatCard from '@/components/cards/variants/StateCard.vue'
-import NewsCard from '@/components/cards/variants/NewsCard.vue'
-import ProfileCard from '@/components/cards/variants/ProfileCard.vue'
+import StatCard from '@/components/card/variants/StatCard.vue'
+import NewsCard from '@/components/card/variants/NewsCard.vue'
+import ProfileCard from '@/components/card/variants/ProfileCard.vue'
 import BaseButton from '@/components/button/BaseButton.vue'
 
 const router = useRouter()

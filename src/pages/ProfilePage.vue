@@ -170,10 +170,10 @@ import { computed, ref, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import BaseGrid from '@/components/grid/BaseGrid.vue'
-import BaseCard from '@/components/cards/BaseCard.vue'
+import BaseCard from '@/components/card/BaseCard.vue'
 import BaseButton from '@/components/button/BaseButton.vue'
-import CountCard from '@/components/cards/variants/CountCard.vue'
-import PredictionCard from '@/components/cards/variants/PredictionCard.vue'
+import CountCard from '@/components/card/variants/CountCard.vue'
+import PredictionCard from '@/components/card/variants/PredictionCard.vue'
 import SelectPill from '@/components/select/variants/PillSelect.vue'
 
 /* --- 라우트 & 모드 판별 --- */
