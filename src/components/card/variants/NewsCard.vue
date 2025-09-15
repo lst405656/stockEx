@@ -36,6 +36,57 @@
 import { computed } from 'vue'
 import BaseCard from '@/components/card/BaseCard.vue'
 
+/**
+ * @component NewsItem
+ * @description
+ * 뉴스/기사 아이템 카드 컴포넌트  
+ * - 썸네일 이미지 + 제목 + 날짜 + 출처를 표시  
+ * - BaseCard 기반으로 클릭 가능/링크 가능  
+ * - 이미지 없을 경우 placeholder 표시  
+ * - 날짜는 기본 `ko-KR` 포맷 또는 `dateFormat` prop으로 커스터마이즈 가능
+ *
+ * @example
+ * <!-- 기본 사용 -->
+ * <NewsItem
+ *   image="/thumb.png"
+ *   title="최신 뉴스 제목"
+ *   date="2025-09-15"
+ *   source="뉴스1"
+ * />
+ *
+ * <!-- 라우터 링크 -->
+ * <NewsItem
+ *   :to="{ name: 'news-detail', params: { id: 1 } }"
+ *   title="기사 제목"
+ *   date="2025-09-15"
+ *   source="YTN"
+ * />
+ *
+ * <!-- 커스텀 포맷 -->
+ * <NewsItem
+ *   title="커스텀 날짜 포맷"
+ *   :date="new Date()"
+ *   :date-format="new Intl.DateTimeFormat('en-US', { dateStyle: 'long' })"
+ * />
+ */
+
+/**
+ * @typedef {Object} NewsItemProps
+ * @property {string} [image=''] - 썸네일 이미지 URL
+ * @property {string} [alt=''] - 이미지 대체 텍스트
+ * @property {string} title - 기사 제목 (필수)
+ * @property {string|Date} [date=''] - 날짜 (문자열 또는 Date 객체)
+ * @property {Intl.DateTimeFormat|null} [dateFormat=null] - 커스텀 날짜 포맷터
+ * @property {string} [source=''] - 기사 출처
+ * @property {string|object|null} [to=null] - router-link 목적지
+ * @property {string} [href=''] - a 태그 링크
+ * @property {string} [target='_self'] - 링크 target
+ * @property {string} [rel=''] - 링크 rel
+ * @property {'outlined'|'elevated'|'soft'|'ghost'} [variant='outlined'] - 카드 스타일
+ * @property {'none'|'sm'|'md'|'lg'} [pad='sm'] - 카드 padding
+ * @property {'md'|'lg'|'xl'|'full'} [radius='lg'] - 카드 radius
+ * @property {boolean} [clickable=false] - 클릭 가능 여부
+ */
 const props = defineProps({
   image: { type: String, default: '' },
   alt: { type: String, default: '' },
@@ -57,6 +108,12 @@ const props = defineProps({
   clickable: { type: Boolean, default: false },
 })
 
+/**
+ * 표시할 날짜 텍스트
+ * - dateFormat prop이 있으면 그대로 사용
+ * - 기본은 ko-KR yyyy.MM.dd 형식
+ * - 변환 실패 시 원본 문자열 출력
+ */
 const dateText = computed(() => {
   if (!props.date) return ''
   try {

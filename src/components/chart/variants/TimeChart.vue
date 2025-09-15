@@ -6,6 +6,45 @@
 import { computed } from 'vue'
 import BaseChart from '../BaseChart.vue'
 
+/**
+ * @component TimeSeriesChart
+ * @description
+ * 시계열 데이터를 선(line) 차트로 표현하는 컴포넌트  
+ * - ECharts 기반 BaseChart 래퍼 사용  
+ * - data = [{ t: Date|number|string, y: number }] 구조  
+ * - 색상, 에어리어(면적), 스무딩, y축 스케일, 그리드, 툴팁 등 옵션 지원  
+ * - locale/decimals로 숫자 포맷 지정 가능
+ *
+ * @example
+ * <!-- 기본 사용 -->
+ * <TimeSeriesChart :data="[{t:'2025-09-15', y:120}, {t:'2025-09-16', y:140}]" name="매출" />
+ *
+ * <!-- 면적/스무딩 -->
+ * <TimeSeriesChart :data="points" name="방문자 수" color="#16a34a" area smooth />
+ *
+ * <!-- 툴팁 끄기 -->
+ * <TimeSeriesChart :data="points" :show-tooltip="false" />
+ *
+ * <!-- y축 고정 스케일 -->
+ * <TimeSeriesChart :data="points" :y-scale="false" />
+ */
+
+/**
+ * @typedef {Object} TimeSeriesChartProps
+ * @property {Array<{t: Date|number|string, y: number}>} data - 시계열 데이터
+ * @property {string} [name=''] - 시리즈 이름
+ * @property {number} [height=320] - 차트 높이(px)
+ * @property {string|object} [theme=''] - ECharts 테마
+ * @property {boolean} [loading=false] - 로딩 오버레이 표시 여부
+ * @property {string} [color='#2563eb'] - 선/면 색상
+ * @property {boolean} [area=false] - 면적 영역 표시 여부
+ * @property {boolean} [smooth=false] - 곡선 스무딩 여부
+ * @property {boolean} [yScale=true] - y축 scale 적용 여부
+ * @property {boolean} [showGrid=true] - 그리드 표시 여부
+ * @property {boolean} [showTooltip=true] - 툴팁 표시 여부
+ * @property {string} [locale='ko-KR'] - 숫자 포맷 로케일
+ * @property {number} [decimals=2] - 소수점 자리수
+ */
 const props = defineProps({
   /** [{ t: Date|number|string, y: number }] */
   data: { type: Array, default: () => [] },
@@ -25,10 +64,22 @@ const props = defineProps({
   decimals: { type: Number, default: 2 },
 })
 
+/**
+ * ECharts에 전달할 데이터 포인트
+ * - t는 Date/타임스탬프/문자열 → ms 단위 숫자
+ * - y는 number 변환
+ * @type {import('vue').ComputedRef<Array<[number, number]>>}
+ */
 const points = computed(() =>
   props.data.map(d => [new Date(d.t).getTime(), Number(d.y)])
 )
 
+/**
+ * 최종 ECharts 옵션
+ * - grid/xAxis/yAxis/tooltip/series 설정
+ * - area/smooth/color/locale/decimals 반영
+ * @type {import('vue').ComputedRef<object>}
+ */
 const option = computed(() => {
   const color = props.color
   const gradient = {

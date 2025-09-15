@@ -41,6 +41,51 @@
 import { computed } from 'vue'
 import BaseCard from '../BaseCard.vue'
 
+/**
+ * @component UserCard
+ * @description
+ * 사용자 정보를 표시하는 카드 컴포넌트  
+ * - 아바타, 이름, 상태 메시지, 인증 배지를 지원  
+ * - 링크/라우팅 기능(BaseCard 기반) 제공  
+ * - `size` 프리셋(sm, md, lg)으로 아바타 크기 조절  
+ * - badge, body를 슬롯으로 확장 가능
+ *
+ * @slot badge   이름 옆 배지 영역 (기본: 인증 뱃지 🏅)
+ * @slot default 상태(status) 아래 추가 콘텐츠 삽입 영역
+ *
+ * @example
+ * <!-- 기본 사용 -->
+ * <UserCard name="홍길동" status="온라인" avatar="/me.png" verified />
+ *
+ * <!-- 작은 크기 -->
+ * <UserCard name="Jane Doe" size="sm" />
+ *
+ * <!-- 배지 슬롯 커스터마이즈 -->
+ * <UserCard name="Admin">
+ *   <template #badge><Tag variant="info">관리자</Tag></template>
+ * </UserCard>
+ *
+ * <!-- 링크 카드 -->
+ * <UserCard :to="{ name: 'profile', params: { id: 1 } }" name="사용자" />
+ */
+
+/**
+ * @typedef {Object} UserCardProps
+ * @property {string} avatar - 아바타 이미지 URL
+ * @property {string} name - 사용자 이름
+ * @property {string} [status=''] - 상태 메시지
+ * @property {boolean} [verified=false] - 인증 여부 (뱃지 표시)
+ * @property {string} [alt=''] - 아바타 대체 텍스트 (기본: "{name}의 아바타")
+ * @property {string|object|null} [to=null] - router-link 목적지
+ * @property {string} [href=''] - a 태그 링크
+ * @property {string} [target='_self'] - 링크 target
+ * @property {string} [rel=''] - 링크 rel
+ * @property {'outlined'|'elevated'|'soft'|'ghost'} [variant='outlined'] - 카드 스타일
+ * @property {'none'|'sm'|'md'|'lg'} [pad='md'] - 카드 padding
+ * @property {'md'|'lg'|'xl'|'full'} [radius='xl'] - 카드 모서리 둥글기
+ * @property {boolean} [clickable=false] - 클릭 가능 여부
+ * @property {'sm'|'md'|'lg'} [size='md'] - 아바타/레이아웃 크기 프리셋
+ */
 const props = defineProps({
   avatar:   { type: String, default: '' },
   name:     { type: String, required: true },
@@ -48,22 +93,27 @@ const props = defineProps({
   verified: { type: Boolean, default: false },
   alt:      { type: String, default: '' },
 
-  // 링크/라우터(BasicCard로 그대로 전달)
+  // 링크/라우터(BaseCard로 전달)
   to:     { type: [String, Object], default: null },
   href:   { type: String, default: '' },
   target: { type: String, default: '_self' },
   rel:    { type: String, default: '' },
 
   // BaseCard 스타일 제어
-  variant:   { type: String, default: 'outlined' }, // outlined | elevated | soft | ghost
-  pad:       { type: String, default: 'md' },       // none | sm | md | lg
-  radius:    { type: String, default: 'xl' },       // md | lg | xl | full
+  variant:   { type: String, default: 'outlined' },
+  pad:       { type: String, default: 'md' },
+  radius:    { type: String, default: 'xl' },
   clickable: { type: Boolean, default: false },
 
   // 크기 프리셋
   size: { type: String, default: 'md' } // sm | md | lg
 })
 
+/**
+ * 아바타 이미지의 대체 텍스트
+ * - alt prop이 있으면 우선 사용
+ * - 없으면 "{name}의 아바타" 자동 생성
+ */
 const altText = computed(() => props.alt || `${props.name}의 아바타`)
 </script>
 

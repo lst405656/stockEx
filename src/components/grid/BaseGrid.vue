@@ -3,7 +3,7 @@
   <component :is="as" class="grid" :style="gridStyle">
     <!-- 비어있을 때 -->
     <slot name="empty" v-if="!items || !items.length">
-      <!-- 기본 empty UI (원하면 slot으로 대체) -->
+      <!-- 기본 empty UI -->
       <div class="grid__empty">데이터가 없습니다.</div>
     </slot>
 
@@ -29,57 +29,90 @@
 <script setup>
 import { computed } from 'vue'
 
+/**
+ * @component Grid
+ * @description
+ * 데이터 배열을 받아 CSS Grid 형태로 배치하는 범용 레이아웃 컴포넌트  
+ * - `items` 배열을 v-for로 렌더링  
+ * - 고정 `cols` 또는 반응형 `minColWidth` 기반 자동 레이아웃 지원  
+ * - `empty` 슬롯 제공 (기본: "데이터가 없습니다.")  
+ * - itemTag/class/style로 아이템 요소를 커스터마이즈 가능
+ *
+ * @example
+ * <!-- 기본 사용 -->
+ * <Grid :items="list">
+ *   <template #default="{ item }">
+ *     <Card :data="item" />
+ *   </template>
+ * </Grid>
+ *
+ * <!-- 고정 컬럼 수 -->
+ * <Grid :items="list" :cols="3" />
+ *
+ * <!-- 반응형 minColWidth -->
+ * <Grid :items="list" :min-col-width="240" gap="16px" />
+ *
+ * <!-- empty 슬롯 -->
+ * <Grid :items="[]">
+ *   <template #empty>⚠️ 데이터 없음</template>
+ * </Grid>
+ */
+
+/**
+ * @typedef {Object} GridProps
+ * @property {Array} [items=[]] - 렌더링할 데이터 배열
+ * @property {number|string|null} [cols=null] - 고정 컬럼 수 (있으면 우선 적용)
+ * @property {number|string} [minColWidth=220] - 반응형 최소 컬럼 너비(px 또는 문자열)
+ * @property {string} [gap='12px'] - 행/열 간격 (rowGap/colGap 미지정 시 사용)
+ * @property {string} [rowGap] - 행 간격
+ * @property {string} [colGap] - 열 간격
+ * @property {string} [as='div'] - 컨테이너 태그명
+ * @property {string} [itemTag='div'] - 아이템 태그명
+ * @property {string|Array|Object} [itemClass=''] - 아이템 클래스
+ * @property {string|Object} [itemStyle=''] - 아이템 인라인 스타일
+ * @property {string|Function|null} [itemKey=null] - 아이템 key 결정 (필드명 또는 함수)
+ * @property {'start'|'center'|'end'|'stretch'} [alignItems='stretch'] - CSS align-items
+ * @property {'start'|'center'|'end'|'stretch'} [justifyItems='stretch'] - CSS justify-items
+ */
 const props = defineProps({
-  /** 렌더할 데이터 */
   items: { type: Array, default: () => [] },
-
-  /** 고정 컬럼 수. 설정 시 이 값 우선 */
   cols: { type: [Number, String], default: null },
-
-  /** 반응형: 카드 최소 너비. 예: 220 또는 '240px'
-   *  grid-template-columns: repeat(auto-fit, minmax(minColWidth, 1fr))
-   */
   minColWidth: { type: [Number, String], default: 220 },
-
-  /** 간격 */
   gap: { type: String, default: '12px' },
   rowGap: { type: String, default: '' },
   colGap: { type: String, default: '' },
-
-  /** 컨테이너/아이템 태그 & 클래스/스타일 */
   as: { type: String, default: 'div' },
   itemTag: { type: String, default: 'div' },
   itemClass: { type: [String, Array, Object], default: '' },
   itemStyle: { type: [String, Object], default: '' },
-
-  /** 키 결정: 문자열(필드명) 또는 함수 (it, i) => key */
   itemKey: { type: [String, Function], default: null },
-
-  /** 정렬 옵션(필요 시 사용) */
-  alignItems: { type: String, default: 'stretch' },   // start | center | end | stretch
-  justifyItems: { type: String, default: 'stretch' }, // start | center | end | stretch
+  alignItems: { type: String, default: 'stretch' },
+  justifyItems: { type: String, default: 'stretch' },
 })
 
-/** px 포맷 */
+/** 숫자값을 px 단위 문자열로 변환 */
 function toPx(v) {
   if (v == null || v === '') return ''
   return typeof v === 'number' ? `${v}px` : v
 }
 
+/**
+ * 최종 grid 스타일 계산
+ * - cols 우선 적용, 없으면 auto-fit + minColWidth
+ * - gap/rowGap/colGap 적용
+ */
 const gridStyle = computed(() => {
   const style = {
     display: 'grid',
     alignItems: props.alignItems,
     justifyItems: props.justifyItems,
   }
-  // 간격
   if (props.rowGap || props.colGap) {
     if (props.rowGap) style.rowGap = props.rowGap
     if (props.colGap) style.columnGap = props.colGap
   } else {
     style.gap = props.gap
   }
-  // 컬럼 규칙
   if (props.cols != null && props.cols !== '') {
     style.gridTemplateColumns = `repeat(${props.cols}, minmax(0, 1fr))`
   } else {
@@ -89,6 +122,7 @@ const gridStyle = computed(() => {
   return style
 })
 
+/** 각 아이템의 key 결정 */
 function keyOf(it, i) {
   if (!props.itemKey) return i
   if (typeof props.itemKey === 'function') return props.itemKey(it, i)

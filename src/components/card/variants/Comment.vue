@@ -1,5 +1,13 @@
 <template>
-  <BaseCard variant="outlined" pad="md" radius="xl" :to="to" :href="href" :target="target" :clickable="true">
+  <BaseCard
+    variant="outlined"
+    pad="md"
+    radius="xl"
+    :to="to"
+    :href="href"
+    :target="target"
+    :clickable="true"
+  >
     <template #header>
       <div class="row">
         <div class="avatar" :style="avatarStyle" />
@@ -18,12 +26,53 @@
   </BaseCard>
 </template>
 
-
 <script setup>
 import { computed } from 'vue'
 import Pill from '@/components/ui/Pill.vue'
 import BaseCard from '@/components/card/BaseCard.vue'
 
+/**
+ * @component OpinionCard
+ * @description
+ * 사용자 의견(Opinion) 카드 컴포넌트  
+ * - 아바타, 닉네임, 인증 배지, 시간 정보 표시  
+ * - 투자 의견(sentiment)을 Pill로 표시 (Strong Sell / Sell / Hold / Buy / Strong Buy)  
+ * - 카드 본문에는 슬롯(default) 또는 `content` 문자열 표시  
+ * - footer 슬롯 제공  
+ * - RouterLink / a 태그 링크로도 활용 가능
+ *
+ * @example
+ * <!-- 기본 사용 -->
+ * <OpinionCard username="Alice" content="이 종목은 좋아 보입니다" />
+ *
+ * <!-- 라우터 링크 카드 -->
+ * <OpinionCard :to="{ name: 'user', params: { id: 1 } }"
+ *              username="Bob" verified :sentiment="'buy'" />
+ *
+ * <!-- 커스텀 콘텐츠 -->
+ * <OpinionCard username="Charlie" :sentiment="'strong-sell'">
+ *   <template #default>
+ *     <p>이 회사는 위험해 보여요 🚨</p>
+ *   </template>
+ *   <template #footer>
+ *     <LikeButton v-model="liked" :count="12" />
+ *   </template>
+ * </OpinionCard>
+ */
+
+/**
+ * @typedef {Object} OpinionCardProps
+ * @property {string} avatar - 아바타 이미지 URL
+ * @property {string} username - 사용자 이름
+ * @property {boolean} [verified=false] - 인증 여부 (뱃지 표시)
+ * @property {string} [timeText=''] - 시간 텍스트
+ * @property {string} [content=''] - 본문 기본 문자열 (슬롯 없을 때 표시)
+ * @property {'strong-sell'|'sell'|'hold'|'buy'|'strong-buy'} [sentiment='hold'] - 투자 의견
+ * @property {string|object|null} [to=null] - router-link 목적지
+ * @property {string} [href=''] - a 태그 링크
+ * @property {string} [target='_self'] - a 태그 target
+ * @property {string} [rel=''] - a 태그 rel
+ */
 const props = defineProps({
   avatar: { type: String, default: '' },
   username: { type: String, required: true },
@@ -41,6 +90,12 @@ const props = defineProps({
   rel: { type: String, default: '' },
 })
 
+/**
+ * @slot default - 카드 본문 (본문 내용)
+ * @slot footer - 카드 하단 푸터 (액션 버튼 등)
+ * @slot header - 카드 헤더 (기본 제공 구조 사용, 오버라이드 가능)
+ */
+
 const isRouter = computed(() => !!props.to && !props.href)
 const relComputed = computed(() => {
   if (props.rel) return props.rel
@@ -48,12 +103,12 @@ const relComputed = computed(() => {
   return undefined
 })
 
-/* 아바타 원형(비어있으면 회색) */
+/** 아바타 원형 스타일 (이미지 없으면 회색 배경) */
 const avatarStyle = computed(() => ({
   backgroundImage: props.avatar ? `url(${props.avatar})` : undefined
 }))
 
-/* 감정 라벨/색상 매핑 */
+/** 감정 라벨/색상 매핑 */
 const MAP = {
   'strong-sell': { label: 'Strong Sell', variant: 'danger'  },
   'sell':        { label: 'Sell',        variant: 'warning' },
@@ -81,12 +136,9 @@ const sentimentVariant = computed(() => (MAP[props.sentiment] || MAP.hold).varia
 .pill{ margin-left:2px; }
 .name{ font-weight:700; color:#111827; }
 .verified{ font-size:18px; line-height:1; }
-
 .time{ color:#9ca3af; white-space:nowrap; }
-
 .body{
   color:#111827; line-height:1.6;
-  /* 한 줄 이상 길어져도 자연스럽게 */
   word-break: break-word;
 }
 </style>
